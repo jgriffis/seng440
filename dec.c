@@ -1,15 +1,44 @@
 #include <stdio.h>
-#include <string.h>
 
-#include "alphabet.h"
+#define MAX_CODE_LEN 7
+#define ASCII_SHIFT 0x41
 
 unsigned char HD_LUT[128] = { 0xb3, 0xb3, 0xb3, 0xb3, 0xb3, 0xb3, 0xb3, 0xb3, 0xb3, 0xb3, 0xb3, 0xb3, 0xb3, 0xb3, 0xb3, 0xb3, 0xc3, 0xc3, 0xc3, 0xc3, 0xc3, 0xc3, 0xc3, 0xc3, 0xc3, 0xc3, 0xc3, 0xc3, 0xc3, 0xc3, 0xc3, 0xc3, 0x74, 0x74, 0x74, 0x74, 0x74, 0x74, 0x74, 0x74, 0x65, 0x65, 0x65, 0x65, 0x55, 0x55, 0x55, 0x55, 0x84, 0x84, 0x84, 0x84, 0x84, 0x84, 0x84, 0x84, 0x94, 0x94, 0x94, 0x94, 0x94, 0x94, 0x94, 0x94, 0xd3, 0xd3, 0xd3, 0xd3, 0xd3, 0xd3, 0xd3, 0xd3, 0xd3, 0xd3, 0xd3, 0xd3, 0xd3, 0xd3, 0xd3, 0xd3, 0xe3, 0xe3, 0xe3, 0xe3, 0xe3, 0xe3, 0xe3, 0xe3, 0xe3, 0xe3, 0xe3, 0xe3, 0xe3, 0xe3, 0xe3, 0xe3, 0xa4, 0xa4, 0xa4, 0xa4, 0xa4, 0xa4, 0xa4, 0xa4, 0x46, 0x46, 0x36, 0x36, 0x7, 0x17, 0x26, 0x26, 0xf3, 0xf3, 0xf3, 0xf3, 0xf3, 0xf3, 0xf3, 0xf3, 0xf3, 0xf3, 0xf3, 0xf3, 0xf3, 0xf3, 0xf3, 0xf3 };
 
-void huffman_decode(unsigned char *input, int len);
+void huffman_decode(unsigned char *input, int len, char *output) {
+    int i;
+    int in_idx, out_idx;
+    unsigned char val, lookup, run;
+    
+    in_idx = 0;
+    out_idx = 0;
+    i = 0;
+    
+    while (in_idx < len) {
+        for (; i < MAX_CODE_LEN; i++) {
+            if (in_idx + i == len) {
+                val <<= (MAX_CODE_LEN - i);
+                break;
+            }
+            
+            val <<= 1;
+            val |= input[in_idx + i];
+        }
+        
+        lookup = HD_LUT[val & 0x7F];
+        output[out_idx++] = (lookup >> 4) + ASCII_SHIFT;
+        
+        run = lookup & 0x0F;
+        in_idx += run;
+        i = MAX_CODE_LEN - run;
+    }
+    
+    output[out_idx] = '\0';
+}
 
 int main(void) {
-    char buffer[1024];
-    unsigned char input[1024];
+    char buffer[512];
+    unsigned char input[512];
     int i;
     
     scanf("%s", buffer);
@@ -17,37 +46,7 @@ int main(void) {
         input[i] = buffer[i] - 0x30;
     }
 
-    huffman_decode(input, i);
+    huffman_decode(input, i, buffer);
+    printf("%s\n", buffer);
 }
 
-void huffman_decode(unsigned char *input, int len) {
-    int i;
-    int index;
-    unsigned char val, lookup;
-    
-    index = 0;
-    
-    for (;;) {
-        val = 0;
-        
-        for (i = 0; i < 7; i++) {
-            if (index + i >= len) {
-                val <<= (7 - i);
-                break;
-            } else {
-                val <<= 1;
-                val |= input[index + i];
-            }
-        }
-        
-        lookup = HD_LUT[val];
-        printf("%c", ((lookup >> 4) & 0x0F) + LOWER);
-        index += lookup & 0x0F;
-        
-        if (index >= len) {
-            break;
-        }
-    }
-    
-    printf("\n");    
-}

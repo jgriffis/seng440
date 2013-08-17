@@ -20,5 +20,9 @@ for line in fin:
         stdout, stderr = p.communicate(encoded)
 
         print stdout.strip() == input_str
+        
+        if not stdout.strip() == input_str:
+            print input_str
+            print stdout.strip()
 
         input_str = ""
