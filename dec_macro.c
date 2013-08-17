@@ -5,48 +5,47 @@
 
 unsigned char HD_LUT[128] = { 0xb3, 0xb3, 0xb3, 0xb3, 0xb3, 0xb3, 0xb3, 0xb3, 0xb3, 0xb3, 0xb3, 0xb3, 0xb3, 0xb3, 0xb3, 0xb3, 0xc3, 0xc3, 0xc3, 0xc3, 0xc3, 0xc3, 0xc3, 0xc3, 0xc3, 0xc3, 0xc3, 0xc3, 0xc3, 0xc3, 0xc3, 0xc3, 0x74, 0x74, 0x74, 0x74, 0x74, 0x74, 0x74, 0x74, 0x65, 0x65, 0x65, 0x65, 0x55, 0x55, 0x55, 0x55, 0x84, 0x84, 0x84, 0x84, 0x84, 0x84, 0x84, 0x84, 0x94, 0x94, 0x94, 0x94, 0x94, 0x94, 0x94, 0x94, 0xd3, 0xd3, 0xd3, 0xd3, 0xd3, 0xd3, 0xd3, 0xd3, 0xd3, 0xd3, 0xd3, 0xd3, 0xd3, 0xd3, 0xd3, 0xd3, 0xe3, 0xe3, 0xe3, 0xe3, 0xe3, 0xe3, 0xe3, 0xe3, 0xe3, 0xe3, 0xe3, 0xe3, 0xe3, 0xe3, 0xe3, 0xe3, 0xa4, 0xa4, 0xa4, 0xa4, 0xa4, 0xa4, 0xa4, 0xa4, 0x46, 0x46, 0x36, 0x36, 0x7, 0x17, 0x26, 0x26, 0xf3, 0xf3, 0xf3, 0xf3, 0xf3, 0xf3, 0xf3, 0xf3, 0xf3, 0xf3, 0xf3, 0xf3, 0xf3, 0xf3, 0xf3, 0xf3 };
 
-void huffman_decode(unsigned char *input, int len, char *output) {
-    int i;
-    int in_idx, out_idx;
-    unsigned char val, lookup, run;
-
-    i = 0;    
-    in_idx = 0;
-    out_idx = 0;
-    
-    while (in_idx < len) {
-        for (; i < MAX_CODE_LEN; i++) {
-            if (in_idx + i == len) {
-                val <<= (MAX_CODE_LEN - i);
-                break;
-            }
-            
-            val <<= 1;
-            val |= input[in_idx + i];
-        }
-        
-        lookup = HD_LUT[val & 0x7F];
-        output[out_idx++] = (lookup >> 4) + ASCII_SHIFT;
-        
-        run = lookup & 0x0F;
-        in_idx += run;
-        i = MAX_CODE_LEN - run;
-    }
-    
+#define HUFFMAN_DECODE(input, len, output) \
+    int i; \
+    int in_idx, out_idx; \
+    unsigned char val, lookup, run; \
+    \
+    i = 0; \
+    in_idx = 0; \
+    out_idx = 0; \
+    \
+    while (in_idx < len) { \
+        for (; i < MAX_CODE_LEN; i++) { \
+            if (in_idx + i >= len) { \
+                val <<= (MAX_CODE_LEN - i); \
+                break; \
+            } \
+            \
+            val <<= 1; \
+            val |= input[in_idx + i]; \
+        } \
+        \
+        lookup = HD_LUT[val & 0x7F]; \
+        output[out_idx++] = (lookup >> 4) + ASCII_SHIFT; \
+        \
+        run = lookup & 0x0F; \
+        in_idx += run; \
+        i = MAX_CODE_LEN - run; \
+    } \
+    \
     output[out_idx] = '\0';
-}
 
 int main(void) {
     char buffer[512];
     unsigned char input[512];
-    int i;
+    int j;
     
     scanf("%s", buffer);
-    for (i = 0; buffer[i] != '\0'; i++) {
-        input[i] = buffer[i] - 0x30;
+    for (j = 0; buffer[j] != '\0'; j++) {
+        input[j] = buffer[j] - 0x30;
     }
 
-    huffman_decode(input, i, buffer);
+    HUFFMAN_DECODE(input, j, buffer);
     printf("%s\n", buffer);
 }
 
