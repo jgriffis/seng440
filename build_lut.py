@@ -42,7 +42,10 @@ for i in range(128):
     if not found:
         entries.append(0)
         
-print "{",
-for e in entries:
-    print hex(e) + ",",
-print "}"
+#print "{",
+#for e in entries:
+#    print hex(e) + ",",
+#print "}"
+
+for i in range(128):
+    print "%3d => \"%s\"," % (i, to_binary(entries[i], 8))
