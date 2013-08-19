@@ -1,0 +1,5 @@
+vhdl isim_temp "vars.vhd"
+vhdl isim_temp "lookup.vhd"
+vhdl isim_temp "accumulator.vhd"
+vhdl isim_temp "huffman.vhd"
+vhdl isim_temp "huffman_TB.vhd"

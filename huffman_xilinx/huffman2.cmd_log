@@ -1,0 +1,1 @@
+xst -intstyle ise -ifn "C:/Users/Jared/huffman/huffman2.xst" -ofn "C:/Users/Jared/huffman/huffman2.syr" 

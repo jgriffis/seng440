@@ -1,0 +1,5 @@
+vhdl work "vars.vhd"
+vhdl work "lookup.vhd"
+vhdl work "accumulator.vhd"
+vhdl work "huffman.vhd"
+vhdl work "huffman_TB.vhd"
