@@ -17,7 +17,7 @@ int main(void) {
         }
 
         if (symbol_to_encode < LOWER || symbol_to_encode > UPPER) {
-            printf("\n%s", "Not a valid symbol");
+            printf("%s", "Not a valid symbol");
             break;
         }
 
