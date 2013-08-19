@@ -25,8 +25,7 @@ void huffman_decode(char *input, int len, char *output) {
                 final = 1;
                 val |= 0;
             } else {
-                // ASCII of '0' is 0x30
-                val |= input[index + i] - 0x30;
+                val |= input[index + i];
             }
         }
         
@@ -43,16 +42,17 @@ void huffman_decode(char *input, int len, char *output) {
 }
 
 int main(void) {
+    char input[512];
+    char output[512];
     int i;
-    char in_buffer[512];
-    char out_buffer[512];
     
-    scanf("%s", in_buffer);
-    for (i = 0; in_buffer[i] != '\0'; i++) {
-        in_buffer[i] = in_buffer[i] - 0x30;
+    scanf("%s", input);
+    // Convert '0' and '1' to integers 0 and 1, respectively
+    for (i = 0; input[i] != '\0'; i++) {
+        input[i] = input[i] - 0x30;
     }
-    len = strlen(in_buffer);
-    huffman_decode(in_buffer, out_buffer);
     
-    printf("%s\n", out_buffer);
+    huffman_decode(input, i, output);
+    printf("%s\n", output);
 }
+

@@ -38,16 +38,17 @@ void huffman_decode(unsigned char *input, int len, char *output) {
 }
 
 int main(void) {
-    char buffer[512];
-    unsigned char input[512];
+    char input[512];
+    char output[512];
     int i;
     
-    scanf("%s", buffer);
-    for (i = 0; buffer[i] != '\0'; i++) {
-        input[i] = buffer[i] - 0x30;
+    scanf("%s", input);
+    // Convert '0' and '1' to integers 0 and 1, respectively
+    for (i = 0; input[i] != '\0'; i++) {
+        input[i] = input[i] - 0x30;
     }
 
-    huffman_decode(input, i, buffer);
-    printf("%s\n", buffer);
+    huffman_decode(input, i, output);
+    printf("%s\n", output);
 }
 

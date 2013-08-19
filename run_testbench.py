@@ -1,28 +1,29 @@
 from subprocess import Popen, PIPE
 
-fin = open("testbench.txt", "r")
-
 input_str = ""
 
-for line in fin:
-    if len(line.strip()) == 0:
-        continue
+for i in range(500):
+    fin = open("testbench.txt", "r")
 
-    if input_str == "":
-        input_str = line.strip()
-    else:
-        p = Popen(["./enc"], stdin=PIPE, stdout=PIPE, stderr=PIPE)
-        stdout, stderr = p.communicate(input_str + "\n")
+    for line in fin:
+        if len(line.strip()) == 0:
+            continue
 
-        encoded = stdout.strip()
+        if input_str == "":
+            input_str = line.strip()
+        else:
+            encoded = line.strip()
 
-        p = Popen(["./dec"], stdin=PIPE, stdout=PIPE, stderr=PIPE)
-        stdout, stderr = p.communicate(encoded)
+            p = Popen(["./dec"], stdin=PIPE, stdout=PIPE, stderr=PIPE)
+            stdout, stderr = p.communicate(encoded)
 
-        print stdout.strip() == input_str
-        
-        if not stdout.strip() == input_str:
-            print input_str
-            print stdout.strip()
+            # print stdout.strip() == input_str
+            
+            if not stdout.strip() == input_str:
+                print "FAIL"
+                # print input_str
+                # print stdout.strip()
 
-        input_str = ""
+            input_str = ""
+
+    fin.close()
